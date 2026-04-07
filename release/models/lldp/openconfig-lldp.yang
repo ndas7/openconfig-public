@@ -25,7 +25,13 @@ module openconfig-lldp {
     "This module defines configuration and operational state data
     for the LLDP protocol.";
 
-  oc-ext:openconfig-version "1.0.0";
+  oc-ext:openconfig-version "1.0.1";
+
+  revision "2026-04-06" {
+    description
+      "Add global TTL configuration/state leaf, interface port-description and custom-tlv-names leaves, custom TLV name leaf, global custom-tlvs list, and add interface counter timestamps for LLDP.";
+    reference "1.0.1";
+  }
 
   revision "2026-01-14" {
     description
@@ -143,6 +149,24 @@ module openconfig-lldp {
         description
           "The number of frame transmit errors on the
           interface.";
+      }
+
+      leaf last-packet-transmitted {
+        type oc-yang:date-and-time;
+        description
+          "Timestamp of the last LLDP packet transmitted on this interface.";
+      }
+
+      leaf last-good-packet-received {
+        type oc-yang:date-and-time;
+        description
+          "Timestamp of the last valid LLDP packet received on this interface.";
+      }
+
+      leaf loopback-packets-received {
+        type oc-yang:date-and-time;
+        description
+          "Timestamp of the last loopback LLDP packet received on this interface.";
       }
   }
 
@@ -441,11 +465,19 @@ module openconfig-lldp {
   grouping lldp-custom-tlv-config {
     description
       "Configuration data for custom LLDP TLVs";
+
+    uses lldp-custom-tlv-common;
   }
 
-  grouping lldp-custom-tlv-state {
+  grouping lldp-custom-tlv-common {
     description
-      "Operational state data for custom LLDP TLVs";
+      "Common data for custom LLDP TLVs";
+
+    leaf name {
+      type string;
+      description
+        "Name of the custom TLV.";
+    }
 
     leaf type {
       type int32;
@@ -479,6 +511,13 @@ module openconfig-lldp {
         "A variable-length octet-string containing the
         instance-specific information for this TLV.";
     }
+  }
+
+  grouping lldp-custom-tlv-state {
+    description
+      "Operational state data for custom LLDP TLVs";
+
+    uses lldp-custom-tlv-common;
   }
 
   grouping lldp-custom-tlv-top {
@@ -522,9 +561,7 @@ module openconfig-lldp {
 
         container config {
           description
-            "Configuration data ";
-
-          uses lldp-custom-tlv-config;
+            "Configuration data for custom LLDP TLVs";
         }
 
         container state {
@@ -534,7 +571,6 @@ module openconfig-lldp {
           description
             "Operational state data ";
 
-          uses lldp-custom-tlv-config;
           uses lldp-custom-tlv-state;
         }
       }
@@ -603,6 +639,23 @@ module openconfig-lldp {
       default "true";
       description
         "Enable or disable the LLDP protocol on the interface.";
+    }
+
+    leaf port-description {
+      type string;
+      description
+        "The binary string containing the actual port identifier for
+        the port which this LLDP PDU was transmitted. The source and
+        format of this field is defined by PtopoPortId from
+        RFC2922.";
+    }
+
+    leaf-list custom-tlv-names {
+      type leafref {
+        path "../../../../custom-tlvs/tlv/name";
+      }
+      description
+        "References to global custom TLV names associated with this interface.";
     }
   }
 
@@ -681,6 +734,13 @@ module openconfig-lldp {
         "System level hello timer for the LLDP protocol.";
     }
 
+    leaf ttl {
+      type uint64;
+      units "seconds";
+      description
+        "Time-to-live value for LLDP PDUs transmitted by this system.";
+    }
+
     leaf-list suppress-tlv-advertisement {
       type identityref {
         base oc-lldp-types:LLDP_TLV;
@@ -703,6 +763,47 @@ module openconfig-lldp {
         "Global LLDP counters";
 
       uses lldp-global-counters;
+    }
+  }
+
+  grouping lldp-global-custom-tlv-top {
+    description
+      "Top-level grouping for global custom LLDP TLVs";
+
+    container custom-tlvs {
+      description
+        "Enclosing container for list of global custom TLVs";
+
+      list tlv {
+        key "name";
+        description
+          "List of global custom LLDP TLVs";
+
+        leaf name {
+          type leafref {
+            path "../config/name";
+          }
+          description
+            "Reference to the list key";
+        }
+
+        container config {
+          description
+            "Configuration data for global custom TLVs";
+
+          uses lldp-custom-tlv-common;
+        }
+
+        container state {
+
+          config false;
+
+          description
+            "Operational state data for global custom TLVs";
+
+          uses lldp-custom-tlv-common;
+        }
+      }
     }
   }
 
@@ -736,6 +837,7 @@ module openconfig-lldp {
 
       uses lldp-management-addresses;
       uses lldp-interface-top;
+      uses lldp-global-custom-tlv-top;
     }
   }
 
