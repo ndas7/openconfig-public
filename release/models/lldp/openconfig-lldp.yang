@@ -164,9 +164,9 @@ module openconfig-lldp {
       }
 
       leaf loopback-packets-received {
-        type oc-yang:date-and-time;
+        type oc-yang:counter64;
         description
-          "Timestamp of the last loopback LLDP packet received on this interface.";
+          "The number of Loopback LLDP PDU received on this interface.";
       }
   }
 
@@ -644,10 +644,9 @@ module openconfig-lldp {
     leaf port-description {
       type string;
       description
-        "The binary string containing the actual port identifier for
-        the port which this LLDP PDU was transmitted. The source and
-        format of this field is defined by PtopoPortId from
-        RFC2922.";
+        "The description of the port to be advertised in the Port
+        Description TLV (Type 4) for LLDP PDUs transmitted on this
+        interface.";
     }
 
     leaf-list custom-tlv-names {
@@ -735,7 +734,7 @@ module openconfig-lldp {
     }
 
     leaf ttl {
-      type uint64;
+      type uint16;
       units "seconds";
       description
         "Time-to-live value for LLDP PDUs transmitted by this system.";
