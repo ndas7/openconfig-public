@@ -658,10 +658,10 @@ module openconfig-lldp {
         advertised port description, overriding any system-generated
         strings or the generic interface description found in
         /interfaces/interface/config/description.
-        
+
         If this leaf is not populated, the implementation
         should default to advertising the value of
-        /interfaces/interface/state/description.
+        /interfaces/interface/state/description.";
       reference
         "Sec 8.5.4 of IEEE Std 802.1AB-2016";
     }
@@ -767,7 +767,7 @@ module openconfig-lldp {
         Note: The TTL value is independent from the hello-timer interval.
         The hello-timer controls how frequently LLDP PDUs are transmitted,
         while the TTL value indicates the validity duration of information
-        contained in those PDUs at the receiving system.
+        contained in those PDUs at the receiving system.";
       reference
         "Sec 8.5.3 of IEEE Std 802.1AB-2016";
     }
