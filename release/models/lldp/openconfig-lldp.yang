@@ -12,6 +12,7 @@ module openconfig-lldp {
   import openconfig-yang-types { prefix oc-yang; }
   import openconfig-inet-types { prefix oc-inet; }
   import openconfig-extensions { prefix oc-ext; }
+  import openconfig-types { prefix oc-types; }
 
 
   // meta
