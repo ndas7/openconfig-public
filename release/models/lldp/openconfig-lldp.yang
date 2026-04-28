@@ -861,9 +861,9 @@ module openconfig-lldp {
 
     container custom-tlvs {
       description
-        "Enclosing container for list of global custom TLVs. 
-        Implementation Note: Custom TLV OUI/subtype combinations 
-        MUST NOT collide with standard LLDP TLVs. Configuration 
+        "Enclosing container for list of global custom TLVs.
+        Implementation Note: Custom TLV OUI/subtype combinations
+        MUST NOT collide with standard LLDP TLVs. Configuration
         of conflicting OUI/subtype values is not permitted.";
 
       list tlv {
