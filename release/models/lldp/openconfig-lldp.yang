@@ -689,6 +689,16 @@ module openconfig-lldp {
     description
       "Configuration data for per-interface custom TLV value overrides";
 
+    leaf name {
+      type leafref {
+        path "/lldp/custom-tlvs/tlv/config/name";
+      }
+      description
+        "Reference to the globally-configured custom TLV name. The override
+        only applies if this name is also present in the interface's
+        custom-tlv-names list.";
+    }
+
     leaf value {
       type binary;
       description
@@ -722,12 +732,10 @@ module openconfig-lldp {
 
         leaf name {
           type leafref {
-            path "../../../../../custom-tlvs/tlv/name";
+            path "../config/name";
           }
           description
-            "Reference to the globally-configured custom TLV name. The override
-            only applies if this name is also present in the interface's
-            custom-tlv-names list.";
+            "Reference to the custom TLV name key";
         }
 
         container config {
