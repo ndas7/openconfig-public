@@ -722,7 +722,7 @@ module openconfig-lldp {
 
         leaf name {
           type leafref {
-            path "../../../../../custom-tlvs/tlv/config/name";
+            path "../../../../../custom-tlvs/tlv/name";
           }
           description
             "Reference to the globally-configured custom TLV name. The override
